@@ -1,6 +1,10 @@
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.stream.Stream;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
@@ -9,64 +13,97 @@ import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 public class Attestation {
 	
 	// Création de XWPFDocument
 	XWPFDocument document = new XWPFDocument();
 	
-	// variable d'import de l'image
+	// Création de la table
+    XWPFTable table = document.createTable();
+    // Appel de la  classe View 
+ 	View view;
+
+	// Variables d'import de l'image
 	FileInputStream is;
+	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
 	
-	// appel de la  classe View 
-	View view;
+	// Variable des informations de l'entreprise
+	String nomEntreprise = "Arkadia PC";
+	String rueEntreprise = "4, rue des Pyrénées";
+	String villeEntreprise = "92500 Rueil Malmaison";
+	String telEntreprise = "+33 (1) 47 08 98 38";
+	String mailEntreprise = "contact@arkadia-pc.fr";
+	String numeroEntreprise = "Agrément N° SAP524160330";
 	
-	/**
+	// Méthode aller à la ligne
+	String newLine = System.getProperty("line.separator");
+	
+	// Méthode informations entreprise 
+	public String entreprise() {
+		return nomEntreprise + newLine + rueEntreprise + newLine + villeEntreprise + newLine + telEntreprise + newLine + mailEntreprise + newLine + numeroEntreprise;
+	}
+	 /**
 	 * Constructeur de la classe Attestation
 	 * @param attestation
 	 * @param view
+	 * @throws IOException 
+	 * @throws InvalidFormatException 
 	 */
-	public Attestation(View view) {
-	
+	public Attestation(View view) throws InvalidFormatException, IOException {
 		
-		// import du logo
-		XWPFParagraph paragraph11 = document.createParagraph();
-		XWPFRun run11 = paragraph11.createRun();
-		String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
+		// Custom des marges du document
+		CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+		CTPageMar pageMar = sectPr.addNewPgMar();
+		pageMar.setLeft(BigInteger.valueOf(1000L));
+		pageMar.setTop(BigInteger.valueOf(440L));
+		pageMar.setRight(BigInteger.valueOf(1000L));
+		pageMar.setBottom(BigInteger.valueOf(440L));
+		//pageMar.setHeader(BigInteger.valueOf(568));
+		//pageMar.setFooter(BigInteger.valueOf(568));
+		// Espacement entre les lignes
+		//documentTitle.setSpacingBefore(100);*/
+		
+		// Création de la première colonne
+		XWPFTableRow row1 = table.getRow(0);
+		row1.getCell(0).setText(entreprise());
+		row1.addNewTableCell();
+		row1.addNewTableCell();
+		
+		// Import du logo
+		XWPFParagraph paragraph02 = document.createParagraph();
+		XWPFRun run02 = paragraph02.createRun();
+		paragraph02 = row1.getCell(2).addParagraph();
+		run02 = paragraph02.createRun();	
 		try {
 			is = new FileInputStream(imgLogo);
-			run11.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogo, Units.toEMU(100), Units.toEMU(75));
-			paragraph11.setAlignment(ParagraphAlignment.RIGHT);
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			run02.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogo, Units.toEMU(100), Units.toEMU(75));
+			paragraph02.setAlignment(ParagraphAlignment.RIGHT);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
 		}
+	
+		/**
+    	//create second row
+    	XWPFTableRow tableRowTwo = table.createRow();
+    	tableRowTwo.getCell(0).setText("col one, row two");
+    	tableRowTwo.getCell(1).setText("col two, row two");
+    	tableRowTwo.getCell(2).setText("col three, row two");
+		 */	
+   
+		// Enlever les bordures de la table 
+		table.removeBorders();
 		
-		// header partie gauche, Arkadia PC bold
-		XWPFParagraph paragraph = document.createParagraph();
-		XWPFRun run = paragraph.createRun();
-		run.setText("Arkadia PC");
-		run.addBreak();
-		run.setBold(true);
-		run.setFontFamily("Calibri");
-		paragraph.setAlignment(ParagraphAlignment.LEFT);
+		/**XWPFParagraph paragraph01 = document.createParagraph();
+		XWPFRun run01 = paragraph01.createRun();
+		XWPFTable table01 = document.createTable(2, 2);
+		table01.getCTTbl().getTblPr().unsetTblBorders();
+		*/
 		
-		// header partie gauche, informations Arkadia PC
-		XWPFParagraph paragraph1 = document.createParagraph();
-		XWPFRun run1 = paragraph.createRun();
-		run1.setText("4, rue des Pyrénées");
-		run1.addBreak();
-		run1.setText("92500 Rueil Malmaison");
-		run1.addBreak();
-		run1.setText("+33 (1) 47 08 98 38");
-		run1.addBreak();
-		run1.setText("contact@arkadia-pc.fr");
-		run1.addBreak();
-		run1.addBreak();
-		run1.setText("Agrément N° SAP524160330");
-		run1.setFontFamily("Calibri");
-		paragraph1.setAlignment(ParagraphAlignment.LEFT);
 		
 		// header partie droite
 		XWPFParagraph paragraph2 = document.createParagraph();
@@ -129,19 +166,25 @@ public class Attestation {
 		run4.setText("La déclaration engage la responsabilité du seul contribuable");
 		run4.addBreak();
 		run4.addBreak();
-		run4.setText("* Pour les personnes utilisant le Chèque Emploi Service Universel, seul le montant financé personnellement est déductible. "
+		// écriture font size différent : 10
+		XWPFParagraph paragraph04 = document.createParagraph();
+		XWPFRun run04 = paragraph04.createRun();
+		run04.setText("* Pour les personnes utilisant le Chèque Emploi Service Universel, seul le montant financé personnellement est déductible. "
 				+ "Une attestation est délivrée par les établissements qui préfinancent le CESU.");
-		run4.addBreak();
-		run4.addBreak();
-		run4.addBreak();
-		run4.addTab();
-		run4.setText("Fait pour valoir ce que de droit,");
-		run4.addBreak();
-		run4.addBreak(); 	
-		run4.setText("Araujo Adelino, gérant.");
-		run4.setFontFamily("Calibri");
-		paragraph4.setIndentationLeft(0);
-		paragraph4.setIndentationHanging(100);
+		run04.setFontSize(10);
+		// retour au font size 11
+		XWPFParagraph paragraph004 = document.createParagraph();
+		XWPFRun run004 = paragraph004.createRun();
+		run004.addBreak();
+		run004.addBreak();
+		run004.addTab();
+		run004.setText("Fait pour valoir ce que de droit,");
+		run004.addBreak();
+		run004.addBreak(); 	
+		run004.setText("Araujo Adelino, gérant.");
+		run004.setFontFamily("Calibri");
+		paragraph004.setIndentationLeft(0);
+		paragraph004.setIndentationHanging(100);
 		
 		// import de la signature 
 		XWPFParagraph paragraph5 = document.createParagraph();

@@ -3,6 +3,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
@@ -11,6 +14,7 @@ import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -57,8 +61,10 @@ public class View extends JFrame {
 	
 	/**
 	 * méthode bouton enregistrer
+	 * @throws IOException 
+	 * @throws InvalidFormatException 
 	 */
-	public void save() {
+	public void save() throws InvalidFormatException, IOException {
 		Attestation attestation = new Attestation(this);
 		attestation.saveDoc();
 	}
@@ -125,7 +131,7 @@ public class View extends JFrame {
 		contentPane.add(lblTitre);
 		
 		JComboBox cmbTitre = new JComboBox();
-		cmbTitre.setModel(new DefaultComboBoxModel(new String[] {"Madame", "Monsieur", "Autre"}));
+		cmbTitre.setModel(new DefaultComboBoxModel(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
 		cmbTitre.setBounds(34, 61, 153, 22);
 		contentPane.add(cmbTitre);
 		
@@ -208,14 +214,14 @@ public class View extends JFrame {
 		lblDate.setBounds(298, 285, 95, 14);
 		contentPane.add(lblDate);
 		
+		// TODO corriger le bug
+		
 		JDateChooser dateChooser = new JDateChooser(); 
 		dateChooser.setDateFormatString("dd MMMM yyyy");
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.YEAR, -1);
-		JDateChooser chooser = new JDateChooser(c.getTime());
-		this.add(chooser);
+		//dateChooser.setCalendar(Calendar.getInstance());
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
+		
 		
 		/**
 		 * Bouton enregistrer	
@@ -223,7 +229,13 @@ public class View extends JFrame {
 		JButton btnEnregistrer = new JButton("Enregistrer");
 		btnEnregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				save();
+				try {
+					save();
+				} catch (InvalidFormatException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnEnregistrer.setFont(new Font("Tahoma", Font.BOLD, 14));
