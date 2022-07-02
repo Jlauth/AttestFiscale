@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JButton;
@@ -18,9 +19,13 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class View extends JFrame {
 
@@ -52,11 +57,67 @@ public class View extends JFrame {
 		});
 	}
 	
+	/*
+	public void checkFields() {
+		if (validateFields()) {
+			txtNom.getText();
+			txtPrenom.getText();
+			txtAdresse.getText();
+			txtVille.getText();
+			txtCP.getText();
+			txtMontantAttest.getText(); 
+			}
+	}
+
+	public boolean validateFields() {
+		if (!validateField(txtNom, "Indiquer un nom")) {
+			return false;
+		} else if (!validateField(txtPrenom, "Indiquer un prénom")) {
+			return false;
+		} else if (!validateField(txtAdresse, "Indiquer un texte")) {
+			return false;
+		} else if (!validateField(txtVille, "Indiquer une ville")) {
+			return false;
+		} else if (!validateField(txtCP, "Indiquer un code postal")) {
+			return false;
+		} else if (!validateField(txtMontantAttest, "Indiquer un montant")) {
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean validateField(JTextField field, String errormsg) {
+		if(field.getText().equals("")) {
+			return failedMessage(field, errormsg); 
+		}
+		else {
+			return true;
+		}	
+	}
+	*/
+	
+	/**
+	 * Vérification champs remplis
+	 * Appel de la méthode save si ils sont remplis
+	 * @throws InvalidFormatException
+	 * @throws IOException
+	 */
+	public void isInputValid() throws InvalidFormatException, IOException {
+		if(("".equals(getTxtNom())) || "".equals(getTxtPrenom()) || "".equals(getTxtVille()) || "".equals(getTxtAdresse()) || "".equals(getTxtMontantAttest())) {
+			JOptionPane.showMessageDialog(contentPane, "Merci de remplir tous les champs");
+		} else {
+			save();
+		}	
+	}
+	
 	/**
 	 * méthode fermeture de l'application
 	 */
 	public void close() {
-		dispose();
+		int n = JOptionPane.showOptionDialog(new JFrame(), "Fermer application?", "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			dispose();
+		} 	
 	}
 	
 	/**
@@ -66,7 +127,10 @@ public class View extends JFrame {
 	 */
 	public void save() throws InvalidFormatException, IOException {
 		Attestation attestation = new Attestation(this);
-		attestation.saveDoc();
+		int n = JOptionPane.showOptionDialog(new JFrame(), "Confirmer enregistrement", "Enregistrer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
+		if (n == JOptionPane.YES_OPTION) {
+			attestation.saveDoc();
+		} 
 	}
 	
 	/**
@@ -111,7 +175,7 @@ public class View extends JFrame {
 	 * Création du Frame 
 	 */
 	public View() {
-		
+		// TODO demande de message de confirmation si on veut quitter + event escape sur le frame	
 		/**
 		 * Information de création du JFrame
 		 */
@@ -183,6 +247,8 @@ public class View extends JFrame {
 		txtVille.setBounds(34, 234, 216, 20);
 		contentPane.add(txtVille);
 		
+		// TODO voir pour un auto-remplissage du CP une fois la ville renseignée 
+		
 		/**
 		 * Code Postal
 		 */
@@ -214,7 +280,7 @@ public class View extends JFrame {
 		lblDate.setBounds(298, 285, 95, 14);
 		contentPane.add(lblDate);
 		
-		// TODO corriger le bug
+		// TODO corriger le bug lié au getDateChooser
 		
 		JDateChooser dateChooser = new JDateChooser(); 
 		dateChooser.setDateFormatString("dd MMMM yyyy");
@@ -222,15 +288,33 @@ public class View extends JFrame {
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
 		
+		// TODO demande de confirmation enregistrement
+		// TODO validation impossible sans tous les champs renseignés 
+		// TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche escape dans les deux cas
+		// TODO customiser les boutons 
 		
 		/**
 		 * Bouton enregistrer	
 		 */
 		JButton btnEnregistrer = new JButton("Enregistrer");
+		// méthode close() lors de l'event key enter
+		btnEnregistrer.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				try {
+					if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+					isInputValid();	
+					}
+				} catch (InvalidFormatException | IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		// méthode save() lors de l'event clic button enregistrer
 		btnEnregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					save();
+					isInputValid();
 				} catch (InvalidFormatException e1) {
 					e1.printStackTrace();
 				} catch (IOException e1) {
@@ -246,6 +330,16 @@ public class View extends JFrame {
 		 * Bouton quitter
 		 */
 		JButton btnQuitter = new JButton("Quitter");
+		// méthode close() lors de l'event key escape
+		btnQuitter.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					close();
+				}
+			}
+		});
+		// méthode close() lors de l'event clic button quitter
 		btnQuitter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();

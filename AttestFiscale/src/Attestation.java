@@ -1,11 +1,8 @@
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.stream.Stream;
-
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -14,7 +11,9 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
@@ -25,28 +24,48 @@ public class Attestation {
 	
 	// Création de la table
     XWPFTable table = document.createTable();
-    // Appel de la  classe View 
+   
+	// Appel de la  classe View 
  	View view;
 
-	// Variables d'import de l'image
+ 	// Méthode de création du Document
+ 	public void createDoc() {
+ 		try {
+ 			document = new XWPFDocument();
+ 			System.out.println("CREATED.");	
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 		}
+ 	}
+ 	
+ 	// Méthode de sauvegarde du Document
+ 	public void saveDoc() {
+ 		try {
+ 			// TODO insérer les informations client dans la  création du document
+ 			FileOutputStream output = new FileOutputStream("C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\attestation-fiscale-annee-prenom-nom.doc");
+ 			document.write(output);
+ 			output.close();
+ 			System.out.println("SAVED.");
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 		}
+ 	}
+ 	
+ 	// Variables d'import de l'image
 	FileInputStream is;
 	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
 	
 	// Variable des informations de l'entreprise
-	String nomEntreprise = "Arkadia PC";
-	String rueEntreprise = "4, rue des Pyrénées";
-	String villeEntreprise = "92500 Rueil Malmaison";
-	String telEntreprise = "+33 (1) 47 08 98 38";
-	String mailEntreprise = "contact@arkadia-pc.fr";
-	String numeroEntreprise = "Agrément N° SAP524160330";
+	String entrepriseName = "Arkadia PC";
+	String entrepriseStreet = "4, rue des Pyrénées";
+	String entrepriseCity = "92500 Rueil Malmaison";
+	String entreprisePhone = "+33 (1) 47 08 98 38";
+	String entrepriseMail = "contact@arkadia-pc.fr";
+	String entrepriseID = "Agrément N° SAP524160330";
 	
-	// Méthode aller à la ligne
-	String newLine = System.getProperty("line.separator");
+	// Trash variable "aller à la ligne" 
+	String cheat = "                ";
 	
-	// Méthode informations entreprise 
-	public String entreprise() {
-		return nomEntreprise + newLine + rueEntreprise + newLine + villeEntreprise + newLine + telEntreprise + newLine + mailEntreprise + newLine + numeroEntreprise;
-	}
 	 /**
 	 * Constructeur de la classe Attestation
 	 * @param attestation
@@ -56,56 +75,53 @@ public class Attestation {
 	 */
 	public Attestation(View view) throws InvalidFormatException, IOException {
 		
+		// Enlever les bordures de la table 
+		table.removeBorders();
 		// Custom des marges du document
 		CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
 		CTPageMar pageMar = sectPr.addNewPgMar();
 		pageMar.setLeft(BigInteger.valueOf(1000L));
-		pageMar.setTop(BigInteger.valueOf(440L));
+		pageMar.setTop(BigInteger.valueOf(550L));
 		pageMar.setRight(BigInteger.valueOf(1000L));
-		pageMar.setBottom(BigInteger.valueOf(440L));
-		//pageMar.setHeader(BigInteger.valueOf(568));
-		//pageMar.setFooter(BigInteger.valueOf(568));
+		pageMar.setBottom(BigInteger.valueOf(550L));
 		// Espacement entre les lignes
-		//documentTitle.setSpacingBefore(100);*/
-		
-		// Création de la première colonne
-		XWPFTableRow row1 = table.getRow(0);
-		row1.getCell(0).setText(entreprise());
-		row1.addNewTableCell();
-		row1.addNewTableCell();
+		//documentTitle.setSpacingBefore(100);
+			
+		// Création du header partie gauche, informations entreprise
+		XWPFTableRow row = table.getRow(0);
+		row.getCell(0).setText(entrepriseName + cheat + cheat + cheat);
+		row.getCell(0).setText(entrepriseStreet + cheat + cheat);
+		row.getCell(0).setText(entrepriseCity + cheat);
+		row.getCell(0).setText(cheat + entreprisePhone);
+		row.getCell(0).setText(cheat + entrepriseMail + cheat);
+		row.getCell(0).setText(entrepriseID);
+		row.addNewTableCell();
+		row.addNewTableCell();	
+		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"	 
 		
 		// Import du logo
-		XWPFParagraph paragraph02 = document.createParagraph();
-		XWPFRun run02 = paragraph02.createRun();
-		paragraph02 = row1.getCell(2).addParagraph();
-		run02 = paragraph02.createRun();	
+		XWPFParagraph paragraph = document.createParagraph();
+		XWPFRun run = paragraph.createRun();
+		paragraph = row.getCell(2).addParagraph();
+		run = paragraph.createRun();	
 		try {
 			is = new FileInputStream(imgLogo);
-			run02.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogo, Units.toEMU(100), Units.toEMU(75));
-			paragraph02.setAlignment(ParagraphAlignment.RIGHT);
+			run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogo, Units.toEMU(110), Units.toEMU(80));
+			paragraph.setAlignment(ParagraphAlignment.RIGHT);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-	
-		/**
-    	//create second row
-    	XWPFTableRow tableRowTwo = table.createRow();
-    	tableRowTwo.getCell(0).setText("col one, row two");
-    	tableRowTwo.getCell(1).setText("col two, row two");
-    	tableRowTwo.getCell(2).setText("col three, row two");
-		 */	
-   
-		// Enlever les bordures de la table 
-		table.removeBorders();
 		
-		/**XWPFParagraph paragraph01 = document.createParagraph();
-		XWPFRun run01 = paragraph01.createRun();
-		XWPFTable table01 = document.createTable(2, 2);
-		table01.getCTTbl().getTblPr().unsetTblBorders();
+		/*
+		// Header gauche entrepriseID
+		XWPFParagraph paragraph1 = document.createParagraph();
+		XWPFRun run1 = paragraph1.createRun();
+		run1.setText(entrepriseID);
+		run1.setFontFamily("Calibri");
+		paragraph1.setAlignment(ParagraphAlignment.LEFT);
+		// TODO réussir à inclure entrepriseID à la table
 		*/
-		
-		
-		// header partie droite
+		// Header droit
 		XWPFParagraph paragraph2 = document.createParagraph();
 		XWPFRun run2 = paragraph2.createRun();
 		run2.setText(view.getTxtNom() + " " + view.getTxtPrenom());
@@ -115,10 +131,12 @@ public class Attestation {
 		run2.setText(view.getTxtCP() + " " + view.getTxtVille());
 		run2.addBreak();
 		run2.setText("le " + view.getDateChooser() + " .");
+		run2.addBreak();
+		run2.addBreak();
 		run2.setFontFamily("Calibri");
 		paragraph2.setAlignment(ParagraphAlignment.RIGHT);
 		
-		// titre 
+		// Titre 
 		XWPFParagraph paragraph3 = document.createParagraph();
 		XWPFRun run3 = paragraph3.createRun();
 		run3.setText("Attestation destinée au Centre des Impôts");
@@ -128,7 +146,7 @@ public class Attestation {
 		run3.setUnderline(UnderlinePatterns.SINGLE);
 		paragraph3.setAlignment(ParagraphAlignment.CENTER);
 		
-		// body
+		// Body
 		XWPFParagraph paragraph4 = document.createParagraph();
 		XWPFRun run4 = paragraph4.createRun();
 		run4.addBreak();
@@ -140,7 +158,8 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText("Montant total des factures de " + view.getDateChooser() + " : " + view.getTxtMontantAttest());
+		// TODO réussir à get la date sans l'appel nul à l'initialisation
+		run4.setText("Montant total des factures de " + view.getDateChooser() + " : " + view.getTxtMontantAttest() + " euros");
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
@@ -181,6 +200,8 @@ public class Attestation {
 		run004.setText("Fait pour valoir ce que de droit,");
 		run004.addBreak();
 		run004.addBreak(); 	
+		run004.addBreak();
+		run004.addBreak();
 		run004.setText("Araujo Adelino, gérant.");
 		run004.setFontFamily("Calibri");
 		paragraph004.setIndentationLeft(0);
@@ -205,29 +226,5 @@ public class Attestation {
 		
 		
 	}
-		
-
-	// création du Document
-	public void createDoc() {
-		try {
-			document = new XWPFDocument();
-			System.out.println("CREATED.");	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	// sauvegarde du Document
-	public void saveDoc() {
-		try {
-			FileOutputStream output = new FileOutputStream("C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\attestation-fiscale-annee-prenom-nom.doc");
-			document.write(output);
-			output.close();
-			System.out.println("SAVED.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	
 }
