@@ -9,11 +9,18 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JButton;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputMap;
+
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.ParseException;
@@ -111,7 +118,7 @@ public class View extends JFrame {
 	}
 	
 	/**
-	 * méthode fermeture de l'application
+	 * Méthode fermeture de l'application
 	 */
 	public void close() {
 		int n = JOptionPane.showOptionDialog(new JFrame(), "Fermer application?", "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
@@ -121,7 +128,8 @@ public class View extends JFrame {
 	}
 	
 	/**
-	 * méthode bouton enregistrer
+	 * Méthode bouton enregistrer 
+	 * Appel de saveDoc();
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
 	 */
@@ -175,7 +183,6 @@ public class View extends JFrame {
 	 * Création du Frame 
 	 */
 	public View() {
-		// TODO demande de message de confirmation si on veut quitter + event escape sur le frame	
 		/**
 		 * Information de création du JFrame
 		 */
@@ -288,16 +295,15 @@ public class View extends JFrame {
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
 		
-		// TODO demande de confirmation enregistrement
-		// TODO validation impossible sans tous les champs renseignés 
 		// TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche escape dans les deux cas
 		// TODO customiser les boutons 
 		
 		/**
-		 * Bouton enregistrer	
+		 * Bouton enregistrer
+		 * Event sur le clic et key enter	
 		 */
 		JButton btnEnregistrer = new JButton("Enregistrer");
-		// méthode close() lors de l'event key enter
+		// Méthode isInputValid() lors de l'event key enter
 		btnEnregistrer.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -310,7 +316,7 @@ public class View extends JFrame {
 				}
 			}
 		});
-		// méthode save() lors de l'event clic button enregistrer
+		// Méthode isInputValid() lors de l'event clic button enregistrer
 		btnEnregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -328,18 +334,21 @@ public class View extends JFrame {
 		
 		/**
 		 * Bouton quitter
+		 * Event sur le clic bouton et escape key
 		 */
 		JButton btnQuitter = new JButton("Quitter");
-		// méthode close() lors de l'event key escape
-		btnQuitter.addKeyListener(new KeyAdapter() {
+		// Méthode close() lors de l'event key escape
+		InputMap im = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap am = getRootPane().getActionMap();
+		im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+		am.put("cancel", new AbstractAction() {
+			private static final long serialVersionUID = 1L;
 			@Override
-			public void keyTyped(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					close();
-				}
+			public void actionPerformed(ActionEvent e) {
+				close();
 			}
 		});
-		// méthode close() lors de l'event clic button quitter
+		// Méthode close() lors de l'event clic button quitter
 		btnQuitter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				close();
@@ -349,6 +358,7 @@ public class View extends JFrame {
 		btnQuitter.setBounds(240, 370, 153, 48);
 		contentPane.add(btnQuitter);
 		
-		
 	}
 }
+
+// TODO essayer de configurer également les keys messagebox
