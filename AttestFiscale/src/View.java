@@ -24,19 +24,17 @@ import javax.swing.InputMap;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class View extends JFrame {
 
+	/**
+	 * Variables du JFrame
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNom;
 	private JTextField txtPrenom;
@@ -44,8 +42,7 @@ public class View extends JFrame {
 	private JTextField txtVille;
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
-	private JComboBox cmbtitre;
-	private int dateChooser;
+	private JComboBox<String> cmbTitre;
 	
 	/**
 	 * Getters
@@ -74,12 +71,47 @@ public class View extends JFrame {
 		return txtMontantAttest.getText();
 	}
 
-	public JComboBox getCmbtitre() {
-		return cmbtitre;
+	public String getCmbTitre() {
+		if (cmbTitre.getSelectedItem() == "Aucun titre") {
+			return "";
+		}
+		return (String) cmbTitre.getSelectedItem();
 	}
 	
 	/**
-	 * méthode main de lancement de l'application
+	 * Méthode getDateChooser() implémentée de la méthode getMontForInt()
+	 * @return la date jour int, mois letters, année int
+	 */
+	public String getDateChooser() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.DAY_OF_MONTH) + " " + getMonthForInt(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.YEAR);
+	}
+	
+	/**
+	 * Méthode changement des mois number en mois letters
+	 */
+	String getMonthForInt(int m) {
+	    String month = "invalid";
+	    DateFormatSymbols dfs = new DateFormatSymbols();
+	    String[] months = dfs.getMonths();
+	    if (m >= 0 && m <= 11 ) {
+	        month = months[m];
+	    }
+	    return month;
+	}
+	
+	/**
+	 * Méthode sélection de l'année uniquement
+	 * @return l'année indiquée dans le calendrier
+	 */
+	public int getYearChooser() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.YEAR);
+	}
+
+	
+	/**
+	 * Méthode main de lancement de l'application
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -135,43 +167,17 @@ public class View extends JFrame {
 		} 
 	}
 	
-	/**
-	 * Méthode changement des mois number en mois letters
-	 */
-	String getMonthForInt(int m) {
-	    String month = "invalid";
-	    DateFormatSymbols dfs = new DateFormatSymbols();
-	    String[] months = dfs.getMonths();
-	    if (m >= 0 && m <= 11 ) {
-	        month = months[m];
-	    }
-	    return month;
-	}
 	
 	
-	/**
-	 * Méthode getDateChooser() implémentée de la méthode getMontForInt()
-	 * @return la date jour int, mois letters, année int
-	 */
-	public String getDateChooser() {
-		Calendar calendar = Calendar.getInstance();
-		return calendar.get(Calendar.DAY_OF_MONTH) + " " + getMonthForInt(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.YEAR);
-	}
 	
-	// TODO Méthode calendar
+	
+// TODO Méthode calendar
 	/*public Calendar calendar() {
 		Calendar calendar = Calendar.getInstance();
 		return calendar;
 	}*/
 	
-	public int getYearChooser() {
-		Calendar calendar = Calendar.getInstance();
-		return calendar.get(Calendar.YEAR);
-	}
 	
-	public void setDateChooser(int dateChooser) {
-		this.dateChooser = dateChooser;
-	}
 	/**
 	 * Création du Frame 
 	 */
@@ -193,8 +199,8 @@ public class View extends JFrame {
 		JLabel lblTitre = new JLabel("Titre");
 		lblTitre.setBounds(34, 36, 46, 14);
 		contentPane.add(lblTitre);
-		
-		JComboBox cmbTitre = new JComboBox();
+	
+		cmbTitre = new JComboBox();
 		cmbTitre.setModel(new DefaultComboBoxModel(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
 		cmbTitre.setBounds(34, 61, 153, 22);
 		contentPane.add(cmbTitre);
@@ -347,6 +353,14 @@ public class View extends JFrame {
 		btnQuitter.setBounds(240, 370, 153, 48);
 		contentPane.add(btnQuitter);
 		
+	}
+
+	
+
+	/**
+	 * @param cmbTitre the cmbTitre to set
+	 */
+	public void setCmbTitre(JComboBox<?> cmbTitre) {
 	}
 }
 

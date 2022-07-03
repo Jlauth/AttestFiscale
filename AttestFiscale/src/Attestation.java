@@ -17,6 +17,19 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 public class Attestation {
 	
+	// Variables d'import des images 
+	FileInputStream is;
+	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
+	String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
+	
+	// Variable des informations de l'entreprise
+	String entrepriseName = "Arkadia PC";
+	String entrepriseStreet = "4, rue des Pyrénées";
+	String entrepriseCity = "92500 Rueil Malmaison";
+	String entreprisePhone = "+33 (1) 47 08 98 38";
+	String entrepriseMail = "contact@arkadia-pc.fr";
+	String entrepriseID = "Agrément N° SAP524160330";
+	
 	// Création de XWPFDocument
 	XWPFDocument document = new XWPFDocument();
 	
@@ -39,6 +52,7 @@ public class Attestation {
  	// Méthode de sauvegarde du Document
  	public void saveDoc(View view) {
  		try {
+ 			String file = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Attestation-Fiscale-"+ view.getYearChooser() + "-" +view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
  			FileOutputStream output = new FileOutputStream(file);
  			document.write(output);
  			output.close();
@@ -47,20 +61,6 @@ public class Attestation {
  			e.printStackTrace();
  		}
  	}
- 	
- 	// Variables d'import des images 
-	FileInputStream is;
-	String file = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Attestation-Fiscale-"+ view.getYearChooser() + "-" +view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
-	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
-	String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
-	
-	// Variable des informations de l'entreprise
-	String entrepriseName = "Arkadia PC";
-	String entrepriseStreet = "4, rue des Pyrénées";
-	String entrepriseCity = "92500 Rueil Malmaison";
-	String entreprisePhone = "+33 (1) 47 08 98 38";
-	String entrepriseMail = "contact@arkadia-pc.fr";
-	String entrepriseID = "Agrément N° SAP524160330";
 	
 	// Trash variable "aller à la ligne" 
 	String cheat = "                ";
@@ -145,7 +145,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.setText("Je soussigné Monsieur Adelino Araujo gérant de l'organisme "
-				+ "agréé Arkadia PC certifie que Monsieur " + view.getTxtPrenom() + " " + view.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
+				+ "agréé Arkadia PC certifie que " + view.getCmbTitre() + " " + view.getTxtPrenom() + " " + view.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
