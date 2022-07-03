@@ -11,9 +11,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
@@ -39,10 +37,9 @@ public class Attestation {
  	}
  	
  	// Méthode de sauvegarde du Document
- 	public void saveDoc() {
+ 	public void saveDoc(View view) {
  		try {
- 			// TODO insérer les informations client dans la  création du document
- 			FileOutputStream output = new FileOutputStream("C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\attestation-fiscale-annee-prenom-nom.doc");
+ 			FileOutputStream output = new FileOutputStream(file);
  			document.write(output);
  			output.close();
  			System.out.println("SAVED.");
@@ -51,9 +48,11 @@ public class Attestation {
  		}
  	}
  	
- 	// Variables d'import de l'image
+ 	// Variables d'import des images 
 	FileInputStream is;
+	String file = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Attestation-Fiscale-"+ view.getYearChooser() + "-" +view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
 	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
+	String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
 	
 	// Variable des informations de l'entreprise
 	String entrepriseName = "Arkadia PC";
@@ -87,6 +86,7 @@ public class Attestation {
 		// Espacement entre les lignes
 		//documentTitle.setSpacingBefore(100);
 			
+		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"
 		// Création du header partie gauche, informations entreprise
 		XWPFTableRow row = table.getRow(0);
 		row.getCell(0).setText(entrepriseName + cheat + cheat + cheat);
@@ -97,7 +97,7 @@ public class Attestation {
 		row.getCell(0).setText(entrepriseID);
 		row.addNewTableCell();
 		row.addNewTableCell();	
-		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"	 
+		 
 		
 		// Import du logo
 		XWPFParagraph paragraph = document.createParagraph();
@@ -112,25 +112,17 @@ public class Attestation {
 			e1.printStackTrace();
 		}
 		
-		/*
-		// Header gauche entrepriseID
-		XWPFParagraph paragraph1 = document.createParagraph();
-		XWPFRun run1 = paragraph1.createRun();
-		run1.setText(entrepriseID);
-		run1.setFontFamily("Calibri");
-		paragraph1.setAlignment(ParagraphAlignment.LEFT);
-		// TODO réussir à inclure entrepriseID à la table
-		*/
 		// Header droit
 		XWPFParagraph paragraph2 = document.createParagraph();
 		XWPFRun run2 = paragraph2.createRun();
+		run2.addBreak();
 		run2.setText(view.getTxtNom() + " " + view.getTxtPrenom());
 		run2.addBreak();
 		run2.setText(view.getTxtAdresse());
 		run2.addBreak();
 		run2.setText(view.getTxtCP() + " " + view.getTxtVille());
 		run2.addBreak();
-		run2.setText("le " + view.getDateChooser() + " .");
+		run2.setText("le " + view.getDateChooser());
 		run2.addBreak();
 		run2.addBreak();
 		run2.setFontFamily("Calibri");
@@ -158,8 +150,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		// TODO réussir à get la date sans l'appel nul à l'initialisation
-		run4.setText("Montant total des factures de " + view.getDateChooser() + " : " + view.getTxtMontantAttest() + " euros");
+		run4.setText("Montant total des factures de " + view.getYearChooser() + " : " + view.getTxtMontantAttest() + " euros");
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
@@ -210,7 +201,6 @@ public class Attestation {
 		// import de la signature 
 		XWPFParagraph paragraph5 = document.createParagraph();
 		XWPFRun run5 = paragraph5.createRun();
-		String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
 		try {
 			is = new FileInputStream(imgSignature);
 			run5.addBreak();

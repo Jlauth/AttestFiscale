@@ -23,6 +23,7 @@ import javax.swing.InputMap;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -44,7 +45,38 @@ public class View extends JFrame {
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
 	private JComboBox cmbtitre;
-	private JDateChooser dateChooser;
+	private int dateChooser;
+	
+	/**
+	 * Getters
+	 */
+	public String getTxtNom() {
+		return txtNom.getText();
+	}
+
+	public String getTxtPrenom() {
+		return txtPrenom.getText();
+	}
+	
+	public String getTxtAdresse() {
+		return txtAdresse.getText();
+	}
+
+	public String getTxtVille() {
+		return txtVille.getText();
+	}
+
+	public String getTxtCP() {
+		return txtCP.getText();
+	}
+
+	public String getTxtMontantAttest() {
+		return txtMontantAttest.getText();
+	}
+
+	public JComboBox getCmbtitre() {
+		return cmbtitre;
+	}
 	
 	/**
 	 * méthode main de lancement de l'application
@@ -56,6 +88,7 @@ public class View extends JFrame {
 					View frame = new View();
 					Attestation attest = new Attestation(frame);
 					attest.createDoc();
+					frame.setLocationRelativeTo(null); // centrer l'application
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -63,45 +96,6 @@ public class View extends JFrame {
 			}
 		});
 	}
-	
-	/*
-	public void checkFields() {
-		if (validateFields()) {
-			txtNom.getText();
-			txtPrenom.getText();
-			txtAdresse.getText();
-			txtVille.getText();
-			txtCP.getText();
-			txtMontantAttest.getText(); 
-			}
-	}
-
-	public boolean validateFields() {
-		if (!validateField(txtNom, "Indiquer un nom")) {
-			return false;
-		} else if (!validateField(txtPrenom, "Indiquer un prénom")) {
-			return false;
-		} else if (!validateField(txtAdresse, "Indiquer un texte")) {
-			return false;
-		} else if (!validateField(txtVille, "Indiquer une ville")) {
-			return false;
-		} else if (!validateField(txtCP, "Indiquer un code postal")) {
-			return false;
-		} else if (!validateField(txtMontantAttest, "Indiquer un montant")) {
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean validateField(JTextField field, String errormsg) {
-		if(field.getText().equals("")) {
-			return failedMessage(field, errormsg); 
-		}
-		else {
-			return true;
-		}	
-	}
-	*/
 	
 	/**
 	 * Vérification champs remplis
@@ -137,46 +131,45 @@ public class View extends JFrame {
 		Attestation attestation = new Attestation(this);
 		int n = JOptionPane.showOptionDialog(new JFrame(), "Confirmer enregistrement", "Enregistrer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
-			attestation.saveDoc();
+			attestation.saveDoc(this);
 		} 
 	}
 	
 	/**
-	 * Getters & Setters
+	 * Méthode changement des mois number en mois letters
 	 */
-	public String getTxtNom() {
-		return txtNom.getText();
-	}
-
-	public String getTxtPrenom() {
-		return txtPrenom.getText();
-	}
-	
-	public String getTxtAdresse() {
-		return txtAdresse.getText();
-	}
-
-	public String getTxtVille() {
-		return txtVille.getText();
-	}
-
-	public String getTxtCP() {
-		return txtCP.getText();
-	}
-
-	public String getTxtMontantAttest() {
-		return txtMontantAttest.getText();
-	}
-
-	public JComboBox getCmbtitre() {
-		return cmbtitre;
-	}
-
-	public JDateChooser getDateChooser() {
-		return dateChooser;
+	String getMonthForInt(int m) {
+	    String month = "invalid";
+	    DateFormatSymbols dfs = new DateFormatSymbols();
+	    String[] months = dfs.getMonths();
+	    if (m >= 0 && m <= 11 ) {
+	        month = months[m];
+	    }
+	    return month;
 	}
 	
-	public void setDateChooser(JDateChooser dateChooser) {
+	
+	/**
+	 * Méthode getDateChooser() implémentée de la méthode getMontForInt()
+	 * @return la date jour int, mois letters, année int
+	 */
+	public String getDateChooser() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.DAY_OF_MONTH) + " " + getMonthForInt(calendar.get(Calendar.MONTH)) + " " + calendar.get(Calendar.YEAR);
+	}
+	
+	// TODO Méthode calendar
+	/*public Calendar calendar() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar;
+	}*/
+	
+	public int getYearChooser() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.YEAR);
+	}
+	
+	public void setDateChooser(int dateChooser) {
 		this.dateChooser = dateChooser;
 	}
 	/**
@@ -193,7 +186,7 @@ public class View extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-			
+		
 		/**
 		 * Titre
 		 */
@@ -287,16 +280,11 @@ public class View extends JFrame {
 		lblDate.setBounds(298, 285, 95, 14);
 		contentPane.add(lblDate);
 		
-		// TODO corriger le bug lié au getDateChooser
-		
 		JDateChooser dateChooser = new JDateChooser(); 
 		dateChooser.setDateFormatString("dd MMMM yyyy");
-		//dateChooser.setCalendar(Calendar.getInstance());
+		dateChooser.setCalendar(Calendar.getInstance());
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
-		
-		// TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche escape dans les deux cas
-		// TODO customiser les boutons 
 		
 		/**
 		 * Bouton enregistrer
@@ -316,6 +304,7 @@ public class View extends JFrame {
 				}
 			}
 		});
+		
 		// Méthode isInputValid() lors de l'event clic button enregistrer
 		btnEnregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -361,4 +350,7 @@ public class View extends JFrame {
 	}
 }
 
-// TODO essayer de configurer également les keys messagebox
+// TODO essayer de configurer également les keys messagebox 
+// TODO ajouter le cmbbox & date aux champs obligatoires 
+// TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche espace dans les deux cas
+// TODO customiser les boutons 

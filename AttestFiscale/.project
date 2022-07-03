@@ -14,11 +14,4 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>attestation-fiscale-annee-prenom-nom.doc</name>
-			<type>1</type>
-			<location>C:/Users/Jean/Desktop/Projetstage1ereannee/DocGenerator/attestation-fiscale-annee-prenom-nom.doc</location>
-		</link>
-	</linkedResources>
 </projectDescription>
