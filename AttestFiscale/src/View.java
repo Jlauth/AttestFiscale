@@ -12,22 +12,33 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.demo.DateChooserPanel;
+
 import javax.swing.JButton;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Insets;
+
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 public class View extends JFrame {
 
@@ -43,7 +54,7 @@ public class View extends JFrame {
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
 	private JComboBox<String> cmbTitre;
-	
+		
 	/**
 	 * Getters
 	 */
@@ -108,7 +119,6 @@ public class View extends JFrame {
 		Calendar calendar = Calendar.getInstance();
 		return calendar.get(Calendar.YEAR);
 	}
-
 	
 	/**
 	 * Méthode main de lancement de l'application
@@ -166,22 +176,12 @@ public class View extends JFrame {
 			attestation.saveDoc(this);
 		} 
 	}
-	
-	
-	
-	
-	
-// TODO Méthode calendar
-	/*public Calendar calendar() {
-		Calendar calendar = Calendar.getInstance();
-		return calendar;
-	}*/
-	
-	
+
 	/**
 	 * Création du Frame 
 	 */
 	public View() {
+		
 		/**
 		 * Information de création du JFrame
 		 */
@@ -253,8 +253,6 @@ public class View extends JFrame {
 		txtVille.setBounds(34, 234, 216, 20);
 		contentPane.add(txtVille);
 		
-		// TODO voir pour un auto-remplissage du CP une fois la ville renseignée 
-		
 		/**
 		 * Code Postal
 		 */
@@ -279,16 +277,16 @@ public class View extends JFrame {
 		txtMontantAttest.setBounds(34, 310, 153, 20);
 		contentPane.add(txtMontantAttest);
 		
+
 		/**
 		 * Date attestation
 		 */
 		JLabel lblDate = new JLabel("Date attestation");
 		lblDate.setBounds(298, 285, 95, 14);
 		contentPane.add(lblDate);
-		
 		JDateChooser dateChooser = new JDateChooser(); 
 		dateChooser.setDateFormatString("dd MMMM yyyy");
-		dateChooser.setCalendar(Calendar.getInstance());
+		dateChooser.setCalendar(Calendar.getInstance()); // set la date du jour dans le frame
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
 		
@@ -310,7 +308,6 @@ public class View extends JFrame {
 				}
 			}
 		});
-		
 		// Méthode isInputValid() lors de l'event clic button enregistrer
 		btnEnregistrer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -352,19 +349,11 @@ public class View extends JFrame {
 		btnQuitter.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnQuitter.setBounds(240, 370, 153, 48);
 		contentPane.add(btnQuitter);
-		
 	}
 
-	
-
-	/**
-	 * @param cmbTitre the cmbTitre to set
-	 */
-	public void setCmbTitre(JComboBox<?> cmbTitre) {
-	}
 }
 
+// TODO choix du dossier lors de l'enregistrement 
 // TODO essayer de configurer également les keys messagebox 
-// TODO ajouter le cmbbox & date aux champs obligatoires 
 // TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche espace dans les deux cas
 // TODO customiser les boutons 

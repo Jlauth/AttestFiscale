@@ -1,8 +1,13 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -23,6 +28,7 @@ public class Attestation {
 	String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
 	
 	// Variable des informations de l'entreprise
+	String entrepriseHolder = "Adelino Araujo";
 	String entrepriseName = "Arkadia PC";
 	String entrepriseStreet = "4, rue des Pyrénées";
 	String entrepriseCity = "92500 Rueil Malmaison";
@@ -51,7 +57,7 @@ public class Attestation {
  	
  	// Méthode de sauvegarde du Document
  	public void saveDoc(View view) {
- 		try {
+ 	/*	try {
  			String file = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Attestation-Fiscale-"+ view.getYearChooser() + "-" +view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
  			FileOutputStream output = new FileOutputStream(file);
  			document.write(output);
@@ -59,6 +65,16 @@ public class Attestation {
  			System.out.println("SAVED.");
  		} catch (Exception e) {
  			e.printStackTrace();
+ 		}*/
+ 		JFrame parentFrame = new JFrame();
+ 		JFileChooser fileChooser = new JFileChooser();
+ 		fileChooser.setDialogTitle("Specify a file to save");   
+ 		 
+ 		int userSelection = fileChooser.showSaveDialog(parentFrame);
+ 		 
+ 		if (userSelection == JFileChooser.APPROVE_OPTION) {
+ 		    File fileToSave = fileChooser.getSelectedFile();
+ 		    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
  		}
  	}
 	
@@ -144,8 +160,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
-		run4.setText("Je soussigné Monsieur Adelino Araujo gérant de l'organisme "
-				+ "agréé Arkadia PC certifie que " + view.getCmbTitre() + " " + view.getTxtPrenom() + " " + view.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
+		run4.setText("Je soussigné Monsieur " + entrepriseHolder +  " gérant de l'organisme agréé " + entrepriseName + " certifie que " + view.getCmbTitre() + " " + view.getTxtPrenom() + " " + view.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
@@ -154,7 +169,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText("Montant total payé en Cesu préfinancés : 0 euros");
+		run4.setText("Montant total payé en CESU préfinancé : 0 euros"); // Cesu préfinancés ? 
 		run4.addBreak();
 		run4.addBreak();
 		run4.setText("Intervenants : ");
@@ -162,7 +177,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText("Adelino Araujo");
+		run4.setText(entrepriseHolder);
 		run4.addBreak();
 		run4.addBreak();
 		run4.setText("Prestations :");
@@ -193,7 +208,7 @@ public class Attestation {
 		run004.addBreak(); 	
 		run004.addBreak();
 		run004.addBreak();
-		run004.setText("Araujo Adelino, gérant.");
+		run004.setText(entrepriseHolder + ", gérant.");
 		run004.setFontFamily("Calibri");
 		paragraph004.setIndentationLeft(0);
 		paragraph004.setIndentationHanging(100);
@@ -211,10 +226,6 @@ public class Attestation {
 			e.printStackTrace();
 		}
 		paragraph5.setAlignment(ParagraphAlignment.RIGHT);
-		//paragraph4.setIndentationLeft(0);
-		//paragraph4.setIndentationHanging(100);
-		
-		
 	}
 	
 }
