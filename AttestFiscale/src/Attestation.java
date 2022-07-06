@@ -3,8 +3,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
@@ -26,9 +26,12 @@ public class Attestation {
 	View view;
 	 	
 	// Variables d'import des images 
-	FileInputStream is;
-	String imgLogo = "/media/logofinal.jpg";
-	String imgSignature = "/media/signature.jpg";
+	InputStream is;
+	File imgLogo = new File("/C:/Users/Jean/git/repository3/AttestFiscale/src/img/logofinal.jpg");
+	String imgLogoAbsolute = imgLogo.getAbsolutePath();
+	File imgSignature = new File("C:/Users/Jean/git/repository3/AttestFiscale/src/img/signature.jpg");
+	String imgSignatureAbsolute = imgSignature.getAbsolutePath();
+	
 	//String fileName = "Attestation-Fiscale-" + view.getYearChooser() + "-" + view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
 	
 	// Variable des informations de l'entreprise
@@ -55,7 +58,12 @@ public class Attestation {
  		}
  	}
  	
- 	// Méthode de sauvegarde du Document
+ 	private String BufferedImage(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	// Méthode de sauvegarde du Document
  	public void saveDoc() throws IOException {
  		JFrame parentFrame = new JFrame();
  		JFileChooser fileChooser = new JFileChooser();
@@ -66,10 +74,10 @@ public class Attestation {
  		   File fileToSave = fileChooser.getSelectedFile();
  		   FileOutputStream output;
  		   try {
- 			   output = new FileOutputStream(fileToSave);
+ 			   output = new FileOutputStream(fileToSave.getAbsolutePath());
  			   document.write(output);
  			   output.close();
- 			   System.out.println("Sauvegarde du document: " + fileToSave.getAbsolutePath());
+ 			   System.out.println("Sauvegarde du document: " + fileToSave);
  		   } catch (FileNotFoundException e) {
  			   e.printStackTrace();
  		   }
@@ -120,7 +128,7 @@ public class Attestation {
 		run = paragraph.createRun();	
 		try {
 			is = new FileInputStream(imgLogo);
-			run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogo, Units.toEMU(110), Units.toEMU(80));
+			run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogoAbsolute, Units.toEMU(110), Units.toEMU(80));
 			paragraph.setAlignment(ParagraphAlignment.RIGHT);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
@@ -217,7 +225,7 @@ public class Attestation {
 		try {
 			is = new FileInputStream(imgSignature);
 			run5.addBreak();
-			run5.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgSignature, Units.toEMU(200), Units.toEMU(70));
+			run5.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgSignatureAbsolute, Units.toEMU(200), Units.toEMU(70));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

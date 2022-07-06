@@ -12,33 +12,22 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.demo.DateChooserPanel;
-
 import javax.swing.JButton;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.Insets;
-
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 public class View extends JFrame {
 
@@ -128,8 +117,8 @@ public class View extends JFrame {
 			public void run() {
 				try {
 					View frame = new View();
-					Attestation attest = new Attestation(frame);
-					attest.createDoc();
+					Attestation attestation = new Attestation(frame);
+					attestation.createDoc();
 					frame.setLocationRelativeTo(null); // centrer l'application
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -284,11 +273,13 @@ public class View extends JFrame {
 		JLabel lblDate = new JLabel("Date attestation");
 		lblDate.setBounds(298, 285, 95, 14);
 		contentPane.add(lblDate);
+		
 		JDateChooser dateChooser = new JDateChooser(); 
 		dateChooser.setDateFormatString("dd MMMM yyyy");
 		dateChooser.setCalendar(Calendar.getInstance()); // set la date du jour dans le frame
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
+		dateChooser.setEnabled(false);
 		
 		/**
 		 * Bouton enregistrer
