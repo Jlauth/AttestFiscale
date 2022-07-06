@@ -173,7 +173,7 @@ public class View extends JFrame {
 		Attestation attestation = new Attestation(this);
 		int n = JOptionPane.showOptionDialog(new JFrame(), "Confirmer enregistrement", "Enregistrer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
-			attestation.saveDoc(this);
+			attestation.saveDoc();
 		} 
 	}
 

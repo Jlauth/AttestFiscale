@@ -22,10 +22,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 public class Attestation {
 	
+	// Appel de la  classe View 
+	View view;
+	 	
 	// Variables d'import des images 
 	FileInputStream is;
-	String imgLogo = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Logo2.jpg";
-	String imgSignature = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Sanstitre.jpg";
+	String imgLogo = "/media/logofinal.jpg";
+	String imgSignature = "/media/signature.jpg";
+	//String fileName = "Attestation-Fiscale-" + view.getYearChooser() + "-" + view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
 	
 	// Variable des informations de l'entreprise
 	String entrepriseHolder = "Adelino Araujo";
@@ -38,13 +42,9 @@ public class Attestation {
 	
 	// Création de XWPFDocument
 	XWPFDocument document = new XWPFDocument();
-	
 	// Création de la table
     XWPFTable table = document.createTable();
    
-	// Appel de la  classe View 
- 	View view;
-
  	// Méthode de création du Document
  	public void createDoc() {
  		try {
@@ -56,25 +56,23 @@ public class Attestation {
  	}
  	
  	// Méthode de sauvegarde du Document
- 	public void saveDoc(View view) {
- 	/*	try {
- 			String file = "C:\\Users\\Jean\\Desktop\\Projetstage1ereannee\\DocGenerator\\Attestation-Fiscale-"+ view.getYearChooser() + "-" +view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
- 			FileOutputStream output = new FileOutputStream(file);
- 			document.write(output);
- 			output.close();
- 			System.out.println("SAVED.");
- 		} catch (Exception e) {
- 			e.printStackTrace();
- 		}*/
+ 	public void saveDoc() throws IOException {
  		JFrame parentFrame = new JFrame();
  		JFileChooser fileChooser = new JFileChooser();
- 		fileChooser.setDialogTitle("Specify a file to save");   
- 		 
+ 		fileChooser.setSelectedFile(new File("Attestation-Fiscale.doc"));
+ 		fileChooser.setDialogTitle("Enregistrer sous");
  		int userSelection = fileChooser.showSaveDialog(parentFrame);
- 		 
  		if (userSelection == JFileChooser.APPROVE_OPTION) {
- 		    File fileToSave = fileChooser.getSelectedFile();
- 		    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+ 		   File fileToSave = fileChooser.getSelectedFile();
+ 		   FileOutputStream output;
+ 		   try {
+ 			   output = new FileOutputStream(fileToSave);
+ 			   document.write(output);
+ 			   output.close();
+ 			   System.out.println("Sauvegarde du document: " + fileToSave.getAbsolutePath());
+ 		   } catch (FileNotFoundException e) {
+ 			   e.printStackTrace();
+ 		   }
  		}
  	}
 	
