@@ -1,36 +1,35 @@
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-
-import com.toedter.calendar.JDateChooser;
-import javax.swing.JButton;
 import java.awt.Font;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.border.EmptyBorder;
 
-import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.text.DateFormatSymbols;
-import java.util.Calendar;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
-public class View extends JFrame {
+import com.toedter.calendar.JDateChooser;
 
+public class AttestationApplication extends JFrame {
+	
+	
 	/**
 	 * Variables du JFrame
 	 */
@@ -43,7 +42,7 @@ public class View extends JFrame {
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
 	private JComboBox<String> cmbTitre;
-		
+	
 	/**
 	 * Getters
 	 */
@@ -116,9 +115,9 @@ public class View extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					View frame = new View();
-					Attestation attestation = new Attestation(frame);
-					attestation.createDoc();
+					AttestationApplication frame = new AttestationApplication();
+					AttestationModel attestationModel = new AttestationModel(frame);
+					attestationModel.createDoc();
 					frame.setLocationRelativeTo(null); // centrer l'application
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -158,8 +157,8 @@ public class View extends JFrame {
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
 	 */
-	public void save() throws InvalidFormatException, IOException {
-		Attestation attestation = new Attestation(this);
+	public void save() throws IOException, InvalidFormatException {
+		AttestationModel attestation = new AttestationModel(this);
 		int n = JOptionPane.showOptionDialog(new JFrame(), "Confirmer enregistrement", "Enregistrer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			attestation.saveDoc();
@@ -169,7 +168,7 @@ public class View extends JFrame {
 	/**
 	 * Création du Frame 
 	 */
-	public View() {
+	public AttestationApplication() {
 		
 		/**
 		 * Information de création du JFrame
@@ -189,8 +188,8 @@ public class View extends JFrame {
 		lblTitre.setBounds(34, 36, 46, 14);
 		contentPane.add(lblTitre);
 	
-		cmbTitre = new JComboBox();
-		cmbTitre.setModel(new DefaultComboBoxModel(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
+		cmbTitre = new JComboBox<String>();
+		cmbTitre.setModel(new DefaultComboBoxModel<String>(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
 		cmbTitre.setBounds(34, 61, 153, 22);
 		contentPane.add(cmbTitre);
 		
@@ -279,7 +278,7 @@ public class View extends JFrame {
 		dateChooser.setCalendar(Calendar.getInstance()); // set la date du jour dans le frame
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
-		dateChooser.setEnabled(false);
+		//dateChooser.setEnabled(false);
 		
 		/**
 		 * Bouton enregistrer

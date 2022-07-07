@@ -20,28 +20,30 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
-public class Attestation {
+public class AttestationModel {
 	
-	// Appel de la  classe View 
-	View view;
-	 	
-	// Variables d'import des images 
-	InputStream is;
-	File imgLogo = new File("/C:/Users/Jean/git/repository3/AttestFiscale/src/img/logofinal.jpg");
-	String imgLogoAbsolute = imgLogo.getAbsolutePath();
-	File imgSignature = new File("C:/Users/Jean/git/repository3/AttestFiscale/src/img/signature.jpg");
-	String imgSignatureAbsolute = imgSignature.getAbsolutePath();
+	// Appel de la classe View 
+	AttestationApplication attestationApplication;
 	
-	//String fileName = "Attestation-Fiscale-" + view.getYearChooser() + "-" + view.getTxtPrenom() + "-" + view.getTxtNom() + ".doc";
+	// Trash variable "aller à la ligne" 
+	private static final String CHEAT = "                ";
 	
 	// Variable des informations de l'entreprise
-	String entrepriseHolder = "Adelino Araujo";
-	String entrepriseName = "Arkadia PC";
-	String entrepriseStreet = "4, rue des Pyrénées";
-	String entrepriseCity = "92500 Rueil Malmaison";
-	String entreprisePhone = "+33 (1) 47 08 98 38";
-	String entrepriseMail = "contact@arkadia-pc.fr";
-	String entrepriseID = "Agrément N° SAP524160330";
+	private static final String ENTREPRISE_HOLDER = "Adelino Araujo";
+	private static final String ENTREPRISE_NAME = "Arkadia PC";
+	private static final String ENTREPRISE_STREET = "4, rue des Pyrénées";
+	private static final String ENTREPRISE_CITY = "92500 Rueil Malmaison";
+	private static final String ENTREPRISE_PHONE = "+33 (1) 47 08 98 38";
+	private static final String ENTREPRISE_MAIL = "contact@arkadia-pc.fr";
+	private static final String ENTREPRISE_ID = "Agrément N° SAP524160330";
+	
+	// Variables d'import des images 
+	private InputStream is;
+	private File imgLogo = new File("src/img/logofinal.jpg");
+	private String imgLogoAbsolute = imgLogo.getAbsolutePath();
+	private File imgSignature = new File("src/img/signature.jpg");
+	private String imgSignatureAbsolute = imgSignature.getAbsolutePath();
+		
 	
 	// Création de XWPFDocument
 	XWPFDocument document = new XWPFDocument();
@@ -58,17 +60,16 @@ public class Attestation {
  		}
  	}
  	
- 	private String BufferedImage(String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	// Méthode de sauvegarde du Document
  	public void saveDoc() throws IOException {
+ 		
+ 		// Constructeurs
  		JFrame parentFrame = new JFrame();
  		JFileChooser fileChooser = new JFileChooser();
- 		fileChooser.setSelectedFile(new File("Attestation-Fiscale.doc"));
+ 		
+ 		// Méthodes création de fichier
  		fileChooser.setDialogTitle("Enregistrer sous");
+ 		fileChooser.setSelectedFile(new File("Attestation-Fiscale" + attestationApplication.getYearChooser() + "-" + attestationApplication.getTxtPrenom() + "-" + attestationApplication.getTxtNom() + ".doc"));
  		int userSelection = fileChooser.showSaveDialog(parentFrame);
  		if (userSelection == JFileChooser.APPROVE_OPTION) {
  		   File fileToSave = fileChooser.getSelectedFile();
@@ -83,9 +84,7 @@ public class Attestation {
  		   }
  		}
  	}
-	
-	// Trash variable "aller à la ligne" 
-	String cheat = "                ";
+
 	
 	 /**
 	 * Constructeur de la classe Attestation
@@ -94,7 +93,9 @@ public class Attestation {
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
 	 */
-	public Attestation(View view) throws InvalidFormatException, IOException {
+	public AttestationModel(AttestationApplication attestationApplication) throws InvalidFormatException, IOException {
+		
+		this.attestationApplication = attestationApplication;
 		
 		// Enlever les bordures de la table 
 		table.removeBorders();
@@ -111,12 +112,12 @@ public class Attestation {
 		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"
 		// Création du header partie gauche, informations entreprise
 		XWPFTableRow row = table.getRow(0);
-		row.getCell(0).setText(entrepriseName + cheat + cheat + cheat);
-		row.getCell(0).setText(entrepriseStreet + cheat + cheat);
-		row.getCell(0).setText(entrepriseCity + cheat);
-		row.getCell(0).setText(cheat + entreprisePhone);
-		row.getCell(0).setText(cheat + entrepriseMail + cheat);
-		row.getCell(0).setText(entrepriseID);
+		row.getCell(0).setText(ENTREPRISE_NAME + CHEAT + CHEAT + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_STREET + CHEAT + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_CITY + CHEAT);
+		row.getCell(0).setText(CHEAT + ENTREPRISE_PHONE);
+		row.getCell(0).setText(CHEAT + ENTREPRISE_MAIL + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_ID);
 		row.addNewTableCell();
 		row.addNewTableCell();	
 		 
@@ -127,7 +128,7 @@ public class Attestation {
 		paragraph = row.getCell(2).addParagraph();
 		run = paragraph.createRun();	
 		try {
-			is = new FileInputStream(imgLogo);
+			is = new FileInputStream(imgLogoAbsolute);
 			run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgLogoAbsolute, Units.toEMU(110), Units.toEMU(80));
 			paragraph.setAlignment(ParagraphAlignment.RIGHT);
 		} catch (FileNotFoundException e1) {
@@ -138,13 +139,14 @@ public class Attestation {
 		XWPFParagraph paragraph2 = document.createParagraph();
 		XWPFRun run2 = paragraph2.createRun();
 		run2.addBreak();
-		run2.setText(view.getTxtNom() + " " + view.getTxtPrenom());
+		run2.setText(attestationApplication.getTxtNom() + " " + attestationApplication.getTxtPrenom());
 		run2.addBreak();
-		run2.setText(view.getTxtAdresse());
+		run2.setText(attestationApplication.getTxtAdresse());
 		run2.addBreak();
-		run2.setText(view.getTxtCP() + " " + view.getTxtVille());
+		run2.setText(attestationApplication.getTxtCP() + " " + attestationApplication.getTxtVille());
 		run2.addBreak();
-		run2.setText("le " + view.getDateChooser());
+		run2.addBreak();
+		run2.setText("le " + attestationApplication.getDateChooser() + ",");
 		run2.addBreak();
 		run2.addBreak();
 		run2.setFontFamily("Calibri");
@@ -166,12 +168,12 @@ public class Attestation {
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
-		run4.setText("Je soussigné Monsieur " + entrepriseHolder +  " gérant de l'organisme agréé " + entrepriseName + " certifie que " + view.getCmbTitre() + " " + view.getTxtPrenom() + " " + view.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
+		run4.setText("Je soussigné Monsieur " + ENTREPRISE_HOLDER +  " gérant de l'organisme agréé " + ENTREPRISE_NAME + " certifie que " + attestationApplication.getCmbTitre() + " " + attestationApplication.getTxtPrenom() + " " + attestationApplication.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText("Montant total des factures de " + view.getYearChooser() + " : " + view.getTxtMontantAttest() + " euros");
+		run4.setText("Montant total des factures de " + attestationApplication.getYearChooser() + " : " + attestationApplication.getTxtMontantAttest() + " euros");
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
@@ -183,7 +185,7 @@ public class Attestation {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText(entrepriseHolder);
+		run4.setText(ENTREPRISE_HOLDER);
 		run4.addBreak();
 		run4.addBreak();
 		run4.setText("Prestations :");
@@ -214,7 +216,7 @@ public class Attestation {
 		run004.addBreak(); 	
 		run004.addBreak();
 		run004.addBreak();
-		run004.setText(entrepriseHolder + ", gérant.");
+		run004.setText(ENTREPRISE_HOLDER + ", gérant.");
 		run004.setFontFamily("Calibri");
 		paragraph004.setIndentationLeft(0);
 		paragraph004.setIndentationHanging(100);
@@ -223,7 +225,7 @@ public class Attestation {
 		XWPFParagraph paragraph5 = document.createParagraph();
 		XWPFRun run5 = paragraph5.createRun();
 		try {
-			is = new FileInputStream(imgSignature);
+			is = new FileInputStream(imgSignatureAbsolute);
 			run5.addBreak();
 			run5.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgSignatureAbsolute, Units.toEMU(200), Units.toEMU(70));
 		} catch (InvalidFormatException e) {
