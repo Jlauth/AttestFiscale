@@ -29,8 +29,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class View extends JFrame {
-
+public class AttestationApplication extends JFrame {
+	
+	
 	/**
 	 * Variables du JFrame
 	 */
@@ -43,7 +44,9 @@ public class View extends JFrame {
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
 	private JComboBox<String> cmbTitre;
-		
+	
+	private AttestationModel attestationModel;
+
 	/**
 	 * Getters
 	 */
@@ -116,9 +119,9 @@ public class View extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					View frame = new View();
-					Attestation attestation = new Attestation(frame);
-					attestation.createDoc();
+					AttestationApplication frame = new AttestationApplication();
+					AttestationModel attestationModel = new AttestationModel(frame);
+					attestationModel.createDoc();
 					frame.setLocationRelativeTo(null); // centrer l'application
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -158,8 +161,8 @@ public class View extends JFrame {
 	 * @throws IOException 
 	 * @throws InvalidFormatException 
 	 */
-	public void save() throws InvalidFormatException, IOException {
-		Attestation attestation = new Attestation(this);
+	public void save() throws IOException, InvalidFormatException {
+		AttestationModel attestation = new AttestationModel(this);
 		int n = JOptionPane.showOptionDialog(new JFrame(), "Confirmer enregistrement", "Enregistrer", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[] {"Oui", "Non"}, JOptionPane.YES_OPTION);
 		if (n == JOptionPane.YES_OPTION) {
 			attestation.saveDoc();
@@ -169,7 +172,7 @@ public class View extends JFrame {
 	/**
 	 * Création du Frame 
 	 */
-	public View() {
+	public AttestationApplication() {
 		
 		/**
 		 * Information de création du JFrame
