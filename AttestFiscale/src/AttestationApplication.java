@@ -343,7 +343,3 @@ public class AttestationApplication extends JFrame {
 
 }
 
-// TODO choix du dossier lors de l'enregistrement 
-// TODO essayer de configurer également les keys messagebox 
-// TODO event escape + enter sur quitter et enregistrer respectivement -> enlever l'utilisation de la touche espace dans les deux cas
-// TODO customiser les boutons 

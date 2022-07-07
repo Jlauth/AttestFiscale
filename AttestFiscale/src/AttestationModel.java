@@ -69,19 +69,19 @@ public class AttestationModel {
  		
  		// Méthodes création de fichier
  		fileChooser.setDialogTitle("Enregistrer sous");
- 		fileChooser.setSelectedFile(new File("Attestation-Fiscale" + attestationApplication.getYearChooser() + "-" + attestationApplication.getTxtPrenom() + "-" + attestationApplication.getTxtNom() + ".doc"));
+ 		fileChooser.setSelectedFile(new File("Attestation-Fiscale-" + attestationApplication.getYearChooser() + "-" + attestationApplication.getTxtPrenom() + "-" + attestationApplication.getTxtNom() + ".doc"));
  		int userSelection = fileChooser.showSaveDialog(parentFrame);
  		if (userSelection == JFileChooser.APPROVE_OPTION) {
- 		   File fileToSave = fileChooser.getSelectedFile();
- 		   FileOutputStream output;
- 		   try {
- 			   output = new FileOutputStream(fileToSave.getAbsolutePath());
- 			   document.write(output);
- 			   output.close();
- 			   System.out.println("Sauvegarde du document: " + fileToSave);
- 		   } catch (FileNotFoundException e) {
- 			   e.printStackTrace();
- 		   }
+ 		    File fileToSave = fileChooser.getSelectedFile();
+ 		    FileOutputStream output;
+ 		    try {
+ 		    	output = new FileOutputStream(fileToSave.getAbsolutePath());
+ 		    	document.write(output);
+ 		    	output.close();
+ 		    	System.out.println("Sauvegarde du document: " + fileToSave);
+ 		    } catch (FileNotFoundException e) {
+ 		    	e.printStackTrace();
+ 		    }
  		}
  	}
 
@@ -108,8 +108,7 @@ public class AttestationModel {
 		pageMar.setBottom(BigInteger.valueOf(550L));
 		// Espacement entre les lignes
 		//documentTitle.setSpacingBefore(100);
-			
-		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"
+		
 		// Création du header partie gauche, informations entreprise
 		XWPFTableRow row = table.getRow(0);
 		row.getCell(0).setText(ENTREPRISE_NAME + CHEAT + CHEAT + CHEAT);
@@ -121,7 +120,6 @@ public class AttestationModel {
 		row.addNewTableCell();
 		row.addNewTableCell();	
 		 
-		
 		// Import du logo
 		XWPFParagraph paragraph = document.createParagraph();
 		XWPFRun run = paragraph.createRun();
