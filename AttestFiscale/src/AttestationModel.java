@@ -25,24 +25,25 @@ public class AttestationModel {
 	// Appel de la classe View 
 	AttestationApplication attestationApplication;
 	
+	// Trash variable "aller à la ligne" 
+	private static final String CHEAT = "                ";
+	
+	// Variable des informations de l'entreprise
+	private static final String ENTREPRISE_HOLDER = "Adelino Araujo";
+	private static final String ENTREPRISE_NAME = "Arkadia PC";
+	private static final String ENTREPRISE_STREET = "4, rue des Pyrénées";
+	private static final String ENTREPRISE_CITY = "92500 Rueil Malmaison";
+	private static final String ENTREPRISE_PHONE = "+33 (1) 47 08 98 38";
+	private static final String ENTREPRISE_MAIL = "contact@arkadia-pc.fr";
+	private static final String ENTREPRISE_ID = "Agrément N° SAP524160330";
+	
 	// Variables d'import des images 
 	private InputStream is;
 	private File imgLogo = new File("src/img/logofinal.jpg");
 	private String imgLogoAbsolute = imgLogo.getAbsolutePath();
 	private File imgSignature = new File("src/img/signature.jpg");
 	private String imgSignatureAbsolute = imgSignature.getAbsolutePath();
-	
-	// Trash variable "aller à la ligne" 
-	private static final String CHEAT = "                ";
-	
-	// Variable des informations de l'entreprise
-	String entrepriseHolder = "Adelino Araujo";
-	String entrepriseName = "Arkadia PC";
-	String entrepriseStreet = "4, rue des Pyrénées";
-	String entrepriseCity = "92500 Rueil Malmaison";
-	String entreprisePhone = "+33 (1) 47 08 98 38";
-	String entrepriseMail = "contact@arkadia-pc.fr";
-	String entrepriseID = "Agrément N° SAP524160330";
+		
 	
 	// Création de XWPFDocument
 	XWPFDocument document = new XWPFDocument();
@@ -61,9 +62,11 @@ public class AttestationModel {
  	
 	// Méthode de sauvegarde du Document
  	public void saveDoc() throws IOException {
+ 		
  		// Constructeurs
  		JFrame parentFrame = new JFrame();
  		JFileChooser fileChooser = new JFileChooser();
+ 		
  		// Méthodes création de fichier
  		fileChooser.setDialogTitle("Enregistrer sous");
  		fileChooser.setSelectedFile(new File("Attestation-Fiscale" + attestationApplication.getYearChooser() + "-" + attestationApplication.getTxtPrenom() + "-" + attestationApplication.getTxtNom() + ".doc"));
@@ -109,12 +112,12 @@ public class AttestationModel {
 		// TODO trouver une méthode pour aller à la ligne sans utiliser le "cheat"
 		// Création du header partie gauche, informations entreprise
 		XWPFTableRow row = table.getRow(0);
-		row.getCell(0).setText(entrepriseName + CHEAT + CHEAT + CHEAT);
-		row.getCell(0).setText(entrepriseStreet + CHEAT + CHEAT);
-		row.getCell(0).setText(entrepriseCity + CHEAT);
-		row.getCell(0).setText(CHEAT + entreprisePhone);
-		row.getCell(0).setText(CHEAT + entrepriseMail + CHEAT);
-		row.getCell(0).setText(entrepriseID);
+		row.getCell(0).setText(ENTREPRISE_NAME + CHEAT + CHEAT + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_STREET + CHEAT + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_CITY + CHEAT);
+		row.getCell(0).setText(CHEAT + ENTREPRISE_PHONE);
+		row.getCell(0).setText(CHEAT + ENTREPRISE_MAIL + CHEAT);
+		row.getCell(0).setText(ENTREPRISE_ID);
 		row.addNewTableCell();
 		row.addNewTableCell();	
 		 
@@ -165,7 +168,7 @@ public class AttestationModel {
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
-		run4.setText("Je soussigné Monsieur " + entrepriseHolder +  " gérant de l'organisme agréé " + entrepriseName + " certifie que " + attestationApplication.getCmbTitre() + " " + attestationApplication.getTxtPrenom() + " " + attestationApplication.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
+		run4.setText("Je soussigné Monsieur " + ENTREPRISE_HOLDER +  " gérant de l'organisme agréé " + ENTREPRISE_NAME + " certifie que " + attestationApplication.getCmbTitre() + " " + attestationApplication.getTxtPrenom() + " " + attestationApplication.getTxtNom() + " a bénéficié d'assistance informatique à domicile, service à la personne :");
 		run4.addBreak();
 		run4.addBreak();
 		run4.addTab();
@@ -182,7 +185,7 @@ public class AttestationModel {
 		run4.addBreak();
 		run4.addTab();
 		run4.addTab();
-		run4.setText(entrepriseHolder);
+		run4.setText(ENTREPRISE_HOLDER);
 		run4.addBreak();
 		run4.addBreak();
 		run4.setText("Prestations :");
@@ -213,7 +216,7 @@ public class AttestationModel {
 		run004.addBreak(); 	
 		run004.addBreak();
 		run004.addBreak();
-		run004.setText(entrepriseHolder + ", gérant.");
+		run004.setText(ENTREPRISE_HOLDER + ", gérant.");
 		run004.setFontFamily("Calibri");
 		paragraph004.setIndentationLeft(0);
 		paragraph004.setIndentationHanging(100);
