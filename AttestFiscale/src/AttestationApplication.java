@@ -35,47 +35,68 @@ public class AttestationApplication extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JComboBox<String> cmbTitre;
 	private JTextField txtNom;
 	private JTextField txtPrenom;
 	private JTextField txtAdresse;
 	private JTextField txtVille;
 	private JTextField txtCP;
 	private JTextField txtMontantAttest;
-	private JComboBox<String> cmbTitre;
 	
+	
+	// Getters des JTextFields
 	/**
-	 * Getters
+	 * @return le titre du client
 	 */
-	public String getTxtNom() {
-		return txtNom.getText();
-	}
-
-	public String getTxtPrenom() {
-		return txtPrenom.getText();
-	}
-	
-	public String getTxtAdresse() {
-		return txtAdresse.getText();
-	}
-
-	public String getTxtVille() {
-		return txtVille.getText();
-	}
-
-	public String getTxtCP() {
-		return txtCP.getText();
-	}
-
-	public String getTxtMontantAttest() {
-		return txtMontantAttest.getText();
-	}
-
 	public String getCmbTitre() {
 		if (cmbTitre.getSelectedItem() == "Aucun titre") {
 			return "";
 		}
 		return (String) cmbTitre.getSelectedItem();
 	}
+	
+	/**
+	 * @return le nom client
+	 */
+	public String getTxtNom() {
+		return txtNom.getText();
+	}
+	
+	/**
+	 * @return le prénom client
+	 */
+	public String getTxtPrenom() {
+		return txtPrenom.getText();
+	}
+	
+	/**
+	 * @return l'adresse client
+	 */
+	public String getTxtAdresse() {
+		return txtAdresse.getText();
+	}
+	
+	/**
+	 * @return la ville client
+	 */
+	public String getTxtVille() {
+		return txtVille.getText();
+	}
+
+	/**
+	 * @return le code postal du client
+	 */
+	public String getTxtCP() {
+		return txtCP.getText();
+	}
+	
+	/**
+	 * @return le montant de l'attestation client
+	 */
+	public String getTxtMontantAttest() {
+		return txtMontantAttest.getText();
+	}
+
 	
 	/**
 	 * Méthode getDateChooser() implémentée de la méthode getMontForInt()
@@ -109,7 +130,10 @@ public class AttestationApplication extends JFrame {
 	}
 	
 	/**
-	 * Méthode main de lancement de l'application
+	 * Méthode Main
+	 * Construction du frame et appel de AttestationModel
+	 * Création du document
+	 * Lancement de l'application
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -188,8 +212,8 @@ public class AttestationApplication extends JFrame {
 		lblTitre.setBounds(34, 36, 46, 14);
 		contentPane.add(lblTitre);
 	
-		cmbTitre = new JComboBox<String>();
-		cmbTitre.setModel(new DefaultComboBoxModel<String>(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
+		cmbTitre = new JComboBox<>();
+		cmbTitre.setModel(new DefaultComboBoxModel<>(new String[] {"Madame", "Mademoiselle", "Monsieur", "Aucun titre"}));
 		cmbTitre.setBounds(34, 61, 153, 22);
 		contentPane.add(cmbTitre);
 		
@@ -278,7 +302,7 @@ public class AttestationApplication extends JFrame {
 		dateChooser.setCalendar(Calendar.getInstance()); // set la date du jour dans le frame
 		dateChooser.setBounds(240, 310, 153, 20);
 		contentPane.add(dateChooser);
-		//dateChooser.setEnabled(false);
+		dateChooser.setEnabled(false);
 		
 		/**
 		 * Bouton enregistrer
