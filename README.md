@@ -33,3 +33,21 @@ L'application permet de :
 ## Auteur
 
 Cette application a été développée par Jean Lauth.
+
+## Installation de la dernière version de JRE pour exécuter l'application
+
+Pour exécuter une application en .jar disponible dans un dépôt sur Windows ou Linux, vous devez d'abord vous assurer que vous avez installé la dernière version du logiciel Java Runtime Environment (JRE) sur votre système. Voici les étapes à suivre pour installer la dernière version de JRE :
+
+    Allez sur le site web d'Oracle pour télécharger la dernière version de JRE : https://www.oracle.com/java/technologies/javase-jre8-downloads.html
+
+    Sélectionnez la version de JRE appropriée pour votre système d'exploitation (Windows ou Linux) et cliquez sur le bouton "Accept License Agreement".
+
+    Téléchargez le fichier d'installation et enregistrez-le sur votre ordinateur.
+
+    Une fois le téléchargement terminé, double-cliquez sur le fichier d'installation pour lancer l'installation.
+
+    Suivez les instructions à l'écran pour installer JRE sur votre système.
+
+    Une fois l'installation terminée, vérifiez que JRE est correctement installé en ouvrant une fenêtre de terminal (ou invite de commande sur Windows) et en tapant "java -version". Cela devrait afficher la version de JRE que vous venez d'installer.
+
+
