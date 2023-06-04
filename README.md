@@ -17,7 +17,6 @@ L'objectif de ce projet était de développer une application de type bureau, à
 * Git : logiciel de gestion de versions de code source.
 * GitHub : plateforme de partage de code.
 * Eclipse : environnement de développement intégré axé Java.
-* JDK 19 : kit de développement pour Java.
 * Swing : framework de développement d’interface graphique sous Java.
 * XWPF : extension de la bibliothèque Apache POI pour manipuler des fichiers Microsoft Word (.docx) en Java.
 
